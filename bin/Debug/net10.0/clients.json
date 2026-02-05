@@ -1,0 +1,26 @@
+[
+  {
+    "Id": 1,
+    "Name": "Ivan",
+    "Email": "email@mail.ru",
+    "CreatedAt": "2026-02-05T19:43:07.0837334+05:00",
+    "city": "Perm",
+    "Orders": []
+  },
+  {
+    "Id": 2,
+    "Name": "Ivan",
+    "Email": "email@mail.ru",
+    "CreatedAt": "2026-02-05T19:44:15.7405976+05:00",
+    "city": "Perm",
+    "Orders": []
+  },
+  {
+    "Id": 3,
+    "Name": "Ivan",
+    "Email": "email@mail.ru",
+    "CreatedAt": "2026-02-05T19:47:21.5655438+05:00",
+    "city": "Perm",
+    "Orders": []
+  }
+]
