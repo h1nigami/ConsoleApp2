@@ -72,8 +72,26 @@ public class OrderRepository : BaseRepository<Order>
     public Order Add(int ClientId, string Description, decimal amount, DateOnly DueDate)
     {
         
-        var order = new Order(_nextId++, ClientId, Description, amount, DueDate);
+        var order = new Order(_nextId++, ClientId, Description, amount, DueDate, false);
         _items.Add(order);
+        return order;
+    }
+
+    public Order? Pop(int orderID)
+    {
+        var order = GetById(orderID);
+        
+        try
+        {
+           _items.Remove(order);
+           order.Succes = true;
+            _items.Add(order);   
+        }
+        catch
+        {
+            throw new Exception("Такого заказа не существует");
+        }
+        
         return order;
     }
 

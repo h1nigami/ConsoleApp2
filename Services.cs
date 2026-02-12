@@ -96,6 +96,12 @@ public class CrmService
 
         return order;
     }
+
+    public async Task<Order> PopOrder(int orderID, OrderRepository orderRepository)
+    {
+        var order = orderRepository.Pop(orderID);
+        return order;
+    }
 }
 
     // Класс-подписчик, который реагирует на события из CrmService.
