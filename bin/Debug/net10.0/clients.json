@@ -287,5 +287,22 @@
         "Succes": false
       }
     ]
+  },
+  {
+    "Id": 18,
+    "Name": "Ivan",
+    "Email": "email@mail.ru",
+    "CreatedAt": "2026-02-19T19:49:07.7028874+05:00",
+    "city": "Perm",
+    "Orders": [
+      {
+        "Id": 14,
+        "ClientId": 18,
+        "Description": "Сделать сайт",
+        "amount": 100.0,
+        "DueDate": "2026-03-21",
+        "Succes": false
+      }
+    ]
   }
 ]
