@@ -75,10 +75,6 @@ public class AreaCalculator
 {
     public void TestRectangleArea(Shape rect)
     {
-        // Клиентский код ожидает, что установка ширины
-        // не должна влиять на высоту (доверяет инварианту Rectangle).
-
-        // Ожидаемый результат: 10 * 5 = 50
         int expectedArea = 50;
         int actualArea = rect.GetArea();
 
@@ -92,5 +88,60 @@ public class AreaCalculator
             Console.WriteLine("Тест провален! Ожидаемая площадь: 50, Фактическая: " + actualArea);
             Console.ResetColor();
         }
+    }
+}
+
+public abstract class GameAI
+{
+    public void Turn()
+    {
+        CollectResources();
+        BuildStructures();
+        BuildUnits();
+        Attack();
+    }
+
+    protected virtual void CollectResources()
+    {
+        Console.WriteLine("Собираем золото и древесину");
+    }
+    protected abstract void BuildStructures();
+    protected abstract void BuildUnits();
+
+    protected virtual void Attack()
+    {
+        Console.WriteLine("Атакуем противника стандартными силами.");
+    }
+}
+
+public class Orcs : GameAI
+{
+    protected override void BuildStructures()
+    {
+        Console.WriteLine("Строим бараки");
+    }
+    protected override void BuildUnits()
+    {
+        Console.WriteLine("Создаём пехотинцев");
+    }
+}
+
+public class MonstersAI : GameAI
+{
+    protected override void CollectResources()
+    {
+        //Пусто. Монстры не занимаются экономикой
+    }
+    protected override void BuildStructures()
+    {
+        //Пусто. Монстры не умеют строить
+    }
+    protected override void BuildUnits()
+    {
+        Console.WriteLine("Порождаем монстров");
+    }
+    protected override void Attack()
+    {
+        Console.WriteLine("Атакуем всем роем");
     }
 }
