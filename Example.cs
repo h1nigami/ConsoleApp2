@@ -73,12 +73,10 @@ public class Square : Shape
 
 public class AreaCalculator
 {
-    public void TestRectangleArea(Rectangle rect)
+    public void TestRectangleArea(Shape rect)
     {
         // Клиентский код ожидает, что установка ширины
         // не должна влиять на высоту (доверяет инварианту Rectangle).
-        rect.Width = 10;
-        rect.Height = 5;
 
         // Ожидаемый результат: 10 * 5 = 50
         int expectedArea = 50;
