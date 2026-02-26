@@ -1,65 +1,44 @@
-public class DataFetcher
+public abstract class BaseReporter
 {
-    private DateTime startDate;
-    private DateTime endDate;
-    public DataFetcher(DateTime startdate, DateTime enddate)
+    protected readonly CrmService _crmService;
+
+    protected BaseReporter(CrmService crm)
     {
-        startDate = startdate;
-        endDate = enddate;
+        _crmService = crm;
     }
-    public List<Order> FetchOrders(OrderRepository orderRepository)
+
+    public void Generate()
     {
-        var orders = orderRepository.GetAll().Where(
-        o => o.Succes == true 
-        && o.DueDate >= DateOnly.FromDateTime(startDate) 
-        && o.DueDate <= DateOnly.FromDateTime(endDate)).ToList();
-        return orders;
+        GenerateHeader();
+        GenerateBody();
+        GenerateFooter();
     }
+    protected virtual void GenerateHeader()
+    {
+        Console.WriteLine("======================================");
+        Console.WriteLine("         ОТЧЕТ ПО СИСТЕМЕ CRM         ");
+        Console.WriteLine("======================================");
+    }
+    protected virtual void GenerateFooter()
+    {
+        Console.WriteLine("___________________________________");
+        Console.WriteLine($"Отчет сгенерирован: {DateTime.Now}");
+        Console.WriteLine("===================================");
+    }
+    protected abstract Task GenerateBody();
 }
 
-public class ReportFormater
+public class ClientListReport : BaseReporter
 {
-    public string Format(List<Order> orders, ClientRepository clientRepository)
+    public ClientListReport(CrmService crm) : base(crm){}
+
+    protected override async Task GenerateBody()
     {
-        var reportContent = $"<html><body></body>\n</html>";
-        decimal totalCost = 0;
-        var added = reportContent.Split("<body>");
-        added[0]+="\n<body>";
-        foreach(var order in orders)
+        Console.WriteLine("\n--- Список всех клиентов ---");
+        var clients = await _crmService.GetAllClients();
+        foreach(var client in clients)
         {
-            totalCost += order.amount;
-            added[0] += $"\nЗаказ под номером {order.Id} стоимостью {order.amount}: {order.Description} от {clientRepository.GetById(order.Id).Name}";
+            Console.WriteLine($"ID: {client.Id}, Имя: {client.Name}, Email: {client.Email}");
         }
-        added[0]+="\n";
-        return added[0] + added[1];
-    }
-}
-
-public class SalesReport
-{
-    private readonly DataFetcher _fetcher;
-    private readonly ReportFormater _formater;
-
-    public SalesReport(DataFetcher fetcher, ReportFormater formater)
-    {
-        _fetcher = fetcher;
-        _formater = formater;
-    }
-
-    public void GenerateReport(OrderRepository orderRepository, ClientRepository clientRepository)
-    {
-        //1. Получение заказов из файла
-        Console.WriteLine("Подключаюсь к файлу");
-        var data = _fetcher.FetchOrders(orderRepository);
-        Console.WriteLine("Данные получены");
-        
-        //2. Форматирвоание данных
-        Console.WriteLine("Форматирую отчет");
-        var formated_report = _formater.Format(data, clientRepository);
-        
-        //3. Сохранение отчета
-        Console.WriteLine("Сохраняю отчет");
-        File.WriteAllText("report.html", formated_report);
-        Console.WriteLine("Отчет сохранен");
     }
 }

@@ -52,10 +52,18 @@ public sealed class AppSettingsSafe
 
 public class CrmService
 {
+    protected ClientRepository clientRepository;
+    protected OrderRepository orderRepository;
     public event Action<Client> ClientAdded;
     public event Action<Order, Client> OrderAdded;
-    private static readonly CrmService _instance = new CrmService();
-    public List<Client> FindClients(Predicate<Client> filter, ClientRepository clientRepository)
+
+    public CrmService(ClientRepository client, OrderRepository order)
+    {
+        clientRepository = client;
+        orderRepository = order;
+    }
+    
+    public List<Client> FindClients(Predicate<Client> filter)
     {
         var result = new List<Client>();
         foreach(var client in clientRepository.GetAll())
@@ -68,18 +76,11 @@ public class CrmService
         return result;
     }
 
-    public static CrmService Instance
-    {
-        get
-        {
-            return _instance;
-        }
-    }
 
-    public async Task<Client> AddClient(string name, string email, string city, ClientRepository _clientRepository)
+    public async Task<Client> AddClient(string name, string email, string city)
     {
-        var client = _clientRepository.Add(name, email, city, new List<Order>());
-        await _clientRepository.SaveAsync();
+        var client = clientRepository.Add(name, email, city, new List<Order>());
+        await clientRepository.SaveAsync();
 
         // 2. Генерируем (вызываем) событие, уведомляя всех подписчиков.
         // Передаем в качестве аргумента только что созданного клиента.
@@ -88,7 +89,7 @@ public class CrmService
         return client;
     }
 
-    public async Task<Order> AddOrder(int clientId, string Description, decimal amount, DateOnly DueDate, OrderRepository orderRepository, ClientRepository clientRepository)
+    public async Task<Order> AddOrder(int clientId, string Description, decimal amount, DateOnly DueDate)
     {
         var order = orderRepository.Add(clientId, Description, amount, DueDate);
         var client = clientRepository.GetById(clientId);
@@ -103,9 +104,14 @@ public class CrmService
         return order;
     }
 
-    public async Task<List<Client>> FindClient(FindContext findStrategy, ClientRepository clientRepository)
+    public async Task<List<Client>> FindClient(FindContext findStrategy)
     {
         return findStrategy.ExecuteFind(clientRepository);
+    }
+
+    public async Task<List<Client>> GetAllClients()
+    {
+        return clientRepository.GetAll();
     }
 }
 
