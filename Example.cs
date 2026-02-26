@@ -51,30 +51,24 @@ public class CalculatorContext
     }
 }
 
-public class Rectangle
+public abstract class Shape
 {
-    // Неявный инвариант: Width и Height независимы.
-    public virtual int Width { get; set; }
-    public virtual int Height { get; set; }
-
-    // Постусловие метода GetArea: он вернет произведение Width и Height.
-    public int GetArea()
-    {
-        return Width * Height;
-    }
+    public abstract int GetArea();
 }
 
-public class Square : Rectangle
+public class Rectangle : Shape
 {
-    public override int Width
-    {
-        set { base.Width = base.Height = value; }
-    }
+    public int Width { get; set; }
+    public int Height { get; set; }
 
-    public override int Height
-    {
-        set { base.Width = base.Height = value; }
-    }
+    public override int GetArea() => Width * Height;
+}
+
+public class Square : Shape
+{
+    public int Side { get; set; }
+
+    public override int GetArea() => Side * Side;
 }
 
 public class AreaCalculator

@@ -6,6 +6,7 @@ public class Program
     {
         var calc = new AreaCalculator();
         calc.TestRectangleArea(new Rectangle());
+        calc.TestRectangleArea(new Square());
         
     }
 }
