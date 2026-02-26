@@ -102,6 +102,11 @@ public class CrmService
         var order = orderRepository.Pop(orderID);
         return order;
     }
+
+    public async Task<List<Client>> FindClient(FindContext findStrategy, ClientRepository clientRepository)
+    {
+        return findStrategy.ExecuteFind(clientRepository);
+    }
 }
 
     // Класс-подписчик, который реагирует на события из CrmService.
