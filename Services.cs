@@ -76,6 +76,11 @@ public class CrmService
         return result;
     }
 
+    public async Task<List<Order>> GetAllOrders()
+    {
+        return orderRepository.GetAll();
+    }
+
 
     public async Task<Client> AddClient(string name, string email, string city)
     {

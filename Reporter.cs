@@ -42,3 +42,23 @@ public class ClientListReport : BaseReporter
         }
     }
 }
+
+public class OrderListReport : BaseReporter
+{
+    public OrderListReport(CrmService crm) : base(crm){}
+
+    protected override async Task GenerateBody()
+    {
+        Console.WriteLine("\n--- Список всех ордеров ---");
+        var orders = await _crmService.GetAllOrders();
+        foreach(var order in orders)
+        {
+            Console.WriteLine($"ID: {order.Id}, Описание: {order.Description}, Стоимость: {order.amount}, Дедлайн: {order.DueDate}");
+        }
+        Console.WriteLine("\n--- Список выполненных ордеров ---");
+        foreach(var order in orders.Where(o => o.Succes).ToList())
+        {
+            Console.WriteLine($"ID: {order.Id}, Описание: {order.Description}, Стоимость: {order.amount}");
+        }
+    }
+}

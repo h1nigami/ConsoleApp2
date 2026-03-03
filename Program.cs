@@ -8,6 +8,8 @@ public class Program
         OrderRepository orderRepository = new OrderRepository("orders.json");
         CrmService crm = new CrmService(clientRepository, orderRepository); 
         BaseReporter ClientReporter = new ClientListReport(crm);
-        ClientReporter.Generate();
+        //ClientReporter.Generate();
+        BaseReporter OrderReporter = new OrderListReport(crm);
+        OrderReporter.Generate();
     }
 }
