@@ -1,66 +1,54 @@
-// "Толстый" интерфейс, который пытается описать все возможные действия
-public interface IMultiFunctionDevice
-{
-    void Print(string content);
-    void Scan(string content);
-    void Fax(string content);
-}
 
-public interface IPrint
+/// <summary>
+/// Как делать не надо
+/// </summary>
+//Низкоуровневый модуль
+public class FileLoger
 {
-    void Pring(string content);
-}
-public interface IScan
-{
-    void Scan(string content);
-}
-
-public interface IFax
-{
-    void Fax(string content);
-}
-
-//Паттерн "Команда"
-public class Editor
-{
-    public string Text {get; set;} = "";
-    public void GetSelection() => Console.WriteLine("выделенный текст");
-    public void DeleteSelectionText() => Console.WriteLine("Удаляю выделенный текст");
-    public void ReplaceSelectionText(string text) => Console.WriteLine($"Вставляю: {text}");
-}
-
-public abstract class Command
-{
-    protected Editor _editor;
-    private string _backup;
-
-    protected Command(Editor editor)
+    public void Log(string message)
     {
-        _editor = editor;
+        File.WriteAllText("log.txt", message);
+    }
+}
+
+//Выосокоуровневый модуль
+public class OrderPreProcessor
+{
+    //Жесткая зависимость от конкретной реализации
+    //Внедрение зависимости через свойство
+    private readonly FileLoger _logger = new FileLoger();
+
+    public void Process()
+    {
+        /// ...Какая то бизнес логика
+        _logger.Log("Заказ обработан");
+    }
+}
+
+//абстрация
+public interface ILogger
+{
+    void Log(string message);
+}
+
+//низкоуровневый модуль зависимый от абстракции
+public class FileLogger : ILogger
+{
+    public void Log(string message){/*........*/}
+}
+
+//высокоуровневый модуль зависимый от абстракции
+public class OrderProcessor
+{
+    private readonly ILogger _logger;
+    public OrderProcessor(ILogger logger) //зависимость приходит извне
+    {
+        _logger = logger;
     }
 
-    protected void SaveBAckup()
+    public void Process()
     {
-        _backup = _editor.Text;
-    }
-
-    public void Undo()
-    {
-        _editor.Text = _backup;
-        Console.WriteLine("Отмена операции");
-    }
-
-    public abstract bool Execute();
-}
-
-public class CutCommand : Command
-{
-    public CutCommand(Editor editor):base(editor){}
-
-    public override bool Execute()
-    {
-        SaveBAckup();
-        _editor.DeleteSelectionText();
-        return true;
+        /// ...Какая то бизнес логика
+        _logger.Log("Заказ обработан");
     }
 }

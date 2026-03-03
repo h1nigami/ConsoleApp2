@@ -49,8 +49,23 @@ public sealed class AppSettingsSafe
         AppVersion = "0.0.2";
     }
 }
+public interface IClientReader
+{
+    Task<List<Client>> GetAllClients();
+    List<Client> FindClients(Predicate<Client> filter);
+}
+public interface IClientWriter
+{
+    Task<Client> AddClient(string name, string email, string city);
+}
 
-public class CrmService
+public interface IOrderReader
+{
+    Task<List<Order>> GetAllOrders();
+}
+
+
+public sealed class CrmService : IClientReader, IClientWriter, IOrderReader
 {
     protected ClientRepository clientRepository;
     protected OrderRepository orderRepository;
@@ -109,6 +124,7 @@ public class CrmService
         return order;
     }
 
+    //DI через метод
     public async Task<List<Client>> FindClient(FindContext findStrategy)
     {
         return findStrategy.ExecuteFind(clientRepository);

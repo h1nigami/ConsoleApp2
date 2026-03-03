@@ -1,15 +1,13 @@
-﻿
+﻿// D - Dependicies Inversion Principles
+
 
 public class Program
 {
     public static async Task Main(string[] args)
     {
-        ClientRepository clientRepository = new ClientRepository("clients.json");
-        OrderRepository orderRepository = new OrderRepository("orders.json");
-        CrmService crm = new CrmService(clientRepository, orderRepository); 
-        BaseReporter ClientReporter = new ClientListReport(crm);
-        //ClientReporter.Generate();
-        BaseReporter OrderReporter = new OrderListReport(crm);
-        OrderReporter.Generate();
+        ILogger logger = new FileLogger();
+        var processor = new OrderProcessor(logger);
+
+        processor.Process();
     }
 }

@@ -1,12 +1,12 @@
 public abstract class BaseReporter
 {
-    protected readonly CrmService _crmService;
-
-    protected BaseReporter(CrmService crm)
+    protected readonly IClientReader _clientReader;
+    protected readonly IOrderReader _orderReader;
+    protected BaseReporter(IClientReader clientReader, IOrderReader orderReader)
     {
-        _crmService = crm;
+        _clientReader = clientReader;
+        _orderReader = orderReader;
     }
-
     public void Generate()
     {
         GenerateHeader();
@@ -30,12 +30,12 @@ public abstract class BaseReporter
 
 public class ClientListReport : BaseReporter
 {
-    public ClientListReport(CrmService crm) : base(crm){}
+    public ClientListReport(IClientReader clientReader, IOrderReader orderReader) : base(clientReader, orderReader){}
 
     protected override async Task GenerateBody()
     {
         Console.WriteLine("\n--- Список всех клиентов ---");
-        var clients = await _crmService.GetAllClients();
+        var clients = await _clientReader.GetAllClients();
         foreach(var client in clients)
         {
             Console.WriteLine($"ID: {client.Id}, Имя: {client.Name}, Email: {client.Email}");
@@ -45,12 +45,12 @@ public class ClientListReport : BaseReporter
 
 public class OrderListReport : BaseReporter
 {
-    public OrderListReport(CrmService crm) : base(crm){}
+    public OrderListReport(IClientReader clientReader, IOrderReader orderReader) : base(clientReader, orderReader){}
 
     protected override async Task GenerateBody()
     {
         Console.WriteLine("\n--- Список всех ордеров ---");
-        var orders = await _crmService.GetAllOrders();
+        var orders = await _orderReader.GetAllOrders();
         foreach(var order in orders)
         {
             Console.WriteLine($"ID: {order.Id}, Описание: {order.Description}, Стоимость: {order.amount}, Дедлайн: {order.DueDate}");
