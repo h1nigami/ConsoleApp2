@@ -21,8 +21,8 @@ public interface IFax
 }
 
 //Паттерн "Команда"
-class Button
+class Editor
 {
-    public string text = "кнопка";
-    public string color = "red";
+    public string Text = "выделенный текст";
+    public void DeleteText() => Console.WriteLine("Удаляю выделенный текст");
 }
