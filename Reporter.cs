@@ -62,3 +62,24 @@ public class OrderListReport : BaseReporter
         }
     }
 }
+
+public abstract class ReportGeneratorFactory
+{
+    public abstract BaseReporter CreateGenerator(IClientReader clientReader, IOrderReader orderReader);
+}
+
+public class ClientListReportFactory : ReportGeneratorFactory
+{
+    public override BaseReporter CreateGenerator(IClientReader clientReader, IOrderReader orderReader)
+    {
+        return new ClientListReport(clientReader, orderReader);
+    }
+}
+
+public class OrderListReportFactory : ReportGeneratorFactory
+{
+    public override BaseReporter CreateGenerator(IClientReader clientReader, IOrderReader orderReader)
+    {
+        return new OrderListReport(clientReader, orderReader);
+    }
+}
