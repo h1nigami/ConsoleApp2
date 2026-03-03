@@ -50,7 +50,7 @@ public abstract class Command
         Console.WriteLine("Отмена операции");
     }
 
-    public abstract bool Execute():
+    public abstract bool Execute();
 }
 
 public class CutCommand : Command
