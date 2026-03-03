@@ -23,6 +23,9 @@ public interface IFax
 //Паттерн "Команда"
 class Editor
 {
-    public string Text = "выделенный текст";
-    public void DeleteText() => Console.WriteLine("Удаляю выделенный текст");
+    public string Text {get; set;} = "";
+    public void GetSelection() => Console.WriteLine("выделенный текст");
+    public void DeleteSelectionText() => Console.WriteLine("Удаляю выделенный текст");
+    public void ReplaceSelectionText(string text) => Console.WriteLine($"Вставляю: {text}");
 }
+
